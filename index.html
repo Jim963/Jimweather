@@ -1,0 +1,523 @@
+<!DOTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <title>今日各地天氣</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.4/themes/hot-sneaks/jquery-ui.css">
+
+    <script type="text/javascript" src = "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src = "https://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.4/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
+
+
+
+</head>
+
+<body>
+
+  <div id="app" class="container1">
+
+    <div class="container2">
+
+      <div id="locationName" class="locationName">
+        臺北市
+      </div>
+
+      <div class="siwtch">
+        <!-- 按鈕圖案 -->
+        <i id="gear" class="fas fa-cog"></i>
+      </div>
+
+    </div>
+
+
+    <div id="weather" class="weather">
+      天氣 描述
+    </div>
+
+
+    <div class="container3">
+
+      <div id="temperature" class="temperature">
+        溫度
+      </div>
+
+      <div id="weatherimage" class="weatherimage">
+        <img id="img020304" src="020304.svg">
+        <img id="img0811" src="0811.svg">
+        <img id="img161718" src="161718.png">
+
+      </div>
+
+    </div>
+
+
+    <div id="humidity" class="humidity">
+      <i class="fas fa-tint"></i>
+      <span id="humidityspan">濕度</span>
+    </div>
+
+    <div id="rainrate" class="rainrate">
+      <i class="fas fa-cloud-rain"></i>
+      <span id="rainratespan">降雨機率</span>
+    </div>
+
+    <div class="updatetime">
+      <span id="updatetime">最後更新時間</span>
+      <i id="redo" class="fas fa-redo-alt"></i>
+
+    </div>
+
+  </div>
+
+
+  <div id="setting" class="container4">
+    <div class="setup">
+      設定
+    </div>
+
+    <div class="area">
+      <span id="areaspan">地區</span>
+
+      <select id="selector" class="selctor">
+        <option value="基隆市">基隆市</option>
+        <option value="臺北市">臺北市</option>
+        <option value="桃園市">桃園市</option>
+        <option value="新竹市">新竹市</option>
+        <option value="臺中市">臺中市</option>
+        <option value="嘉義市">嘉義市</option>
+        <option value="臺南市">臺南市</option>
+        <option value="高雄市">高雄市</option>
+        <!-- <option value="屏東市">屏東市</option> -->
+      </select>
+
+    </div>
+
+    <button id="back">返回</button>
+    <button id="confirm">儲存</button>
+
+
+
+
+  </div>
+
+
+  <script type="text/javascript">
+
+  var city_location = "臺北市";
+
+
+//進入程式後執行獲取天氣
+getWeatherState();
+//將預設的城市寫入select的val中
+$("#selector").val(city_location);
+
+
+
+  // CWB-85523780-001C-46E0-908D-A089A57888A6 資料授權碼
+
+  var t = null;
+function time(){
+dt = new Date();
+// console.log(dt);
+// var y=dt.getFullYear();
+var h=dt.getHours();
+var m=dt.getMinutes();
+// var s=dt.getSeconds();
+document.getElementById('updatetime').innerHTML="最後更新時間 : " + h +"時"+ m +"分" ;
+// t = setTimeout(time,1000);
+}
+// window.onload=function(){time()}
+
+
+
+
+
+  function getWeatherState(){
+    $.ajax({
+
+      type: 'GET',
+      url:`https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-091?Authorization=CWB-85523780-001C-46E0-908D-A089A57888A6&format=JSON&locationName=${city_location}&elementName=T,Wx,PoP12h,RH`,
+
+      success:function(data){
+
+        time();
+
+        document.getElementById('temperature').innerHTML = data.records.locations[0].location[0].weatherElement[1].time[0].elementValue[0].value + "℃";
+
+        document.getElementById('weather').innerHTML = data.records.locations[0].location[0].weatherElement[3].time[0].elementValue[0].value; //天氣描述
+
+        document.getElementById('rainratespan').innerHTML = "降雨機率 : " + data.records.locations[0].location[0].weatherElement[0].time[0].elementValue[0].value + "%";
+
+        document.getElementById('humidityspan').innerHTML = "相對溼度 : " + data.records.locations[0].location[0].weatherElement[2].time[0].elementValue[0].value + "%";
+
+        var weatherNumber = data.records.locations[0].location[0].weatherElement[3].time[0].elementValue[1].value; //天氣描述編號
+
+        // console.log(weatherNumber);
+
+
+        switch (weatherNumber) {
+          case "02":
+          // document.getElementById('weatherimage').innerHTML = "成功"
+            $("#img020304").show();
+            break;
+
+            case "03":
+            // document.getElementById('weatherimage').innerHTML = "成功"
+              $("#img020304").show();
+              break;
+
+              case "05":
+                $("#img020304").show();
+                break;
+
+              case "04":
+              // document.getElementById('weatherimage').innerHTML = "成功"
+                $("#img020304").show();
+                break;
+
+                case "08":
+                // document.getElementById('weatherimage').innerHTML = "成功"
+                  $("#img0811").show();
+                  break;
+
+                  case "07":                  
+                    $("#img0811").show();
+                    break;
+
+                  case "11":
+                  // document.getElementById('weatherimage').innerHTML = "成功"
+                    $("#img0811").show();
+                    break;
+
+                    case "16":
+                      $("#img161718").show();
+                      break;
+
+                      case "15":
+                        $("#img161718").show();
+                        break;
+
+                    case "17":
+                      $("#img161718").show();
+                      break;
+
+                      case "18":
+                        $("#img161718").show();
+                        break;
+
+        }
+
+      }
+
+    })
+  }
+
+
+
+
+  //開啟設定面板
+function openSetting(){
+  $("#app").hide();
+  $("#setting").show();
+}
+
+//關閉設定面板
+function closeSetting(){
+   $("#app").show();
+  $("#setting").hide();
+}
+
+//設定按鈕觸發開啟設定面板
+$("#gear").click(function() {
+  openSetting();
+});
+
+//儲存設定
+$("#confirm").click(function(){
+
+  city_location = $("#selector").val();
+  $("#locationName").html(city_location)
+  getWeatherState();
+  closeSetting();
+})
+
+//返回
+$("#back").click(function(){
+  closeSetting();
+  })
+
+
+  $("#redo").click(function(){
+  getWeatherState();
+})
+
+
+  </script>
+
+</body>
+</html>
+
+<style>
+
+*{
+
+  font-family: 微軟正黑體;
+  /* font-weight: bold; */
+
+}
+
+body{
+  background: linear-gradient(to bottom right,white,grey);
+  position: relative;
+}
+
+
+
+
+.container1{
+  width: 550px;
+  height: 440px;
+  background: linear-gradient(#B8DCFF,#567EE3);
+  /* background-color: #36463C; */
+  border: 2px solid grey;
+  border-radius: 15px;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.6) ;
+  /* opacity: 0.5; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 20px 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  /* display: none; */
+}
+
+
+.locationName{
+
+  width: 200px;
+  height: 80px;
+  color: white;
+  font-size: 50px;
+  display: inline-block;
+  font-weight: bold;
+  /* float: left;  */
+
+}
+
+.siwtch{
+  width: 50px;
+  height: 50px;
+  color: white;
+  font-size: 40px;
+  float: right;
+  position:relative;
+  margin-top: 10px;
+}
+
+
+
+#gear:hover{
+  cursor:pointer;
+  color: #323651;
+
+}
+
+#redo:hover{
+  cursor:pointer;
+  color: #323651;
+}
+
+#back:hover{
+  cursor:pointer;
+  background-color: #323651;
+  color: white;
+}
+
+#confirm:hover{
+  cursor:pointer;
+  background-color: #323651;
+  color: white;
+}
+
+
+.weather{
+
+  width: 200px;
+  height: 50px;
+  /* margin-top: 20px; */
+  color: white;
+  font-size: 20px;
+
+  /* float: left; */
+
+}
+
+.temperature{
+  width: 300px;
+  height: 150px;
+  color: white;
+  font-size: 100px;
+  font-weight: bold;
+  display: inline-block;
+
+}
+
+.weatherimage{
+  width: 200px;
+  height: 200px;
+  color: white;
+  font-size: 50px;
+  margin-top: -50px;
+  float: right;
+
+  /* position:relative; */
+
+}
+
+
+
+#img020304{
+  width: 200px;
+  height: 200px;
+  display: none;
+
+}
+
+#img0811{
+  width: 200px;
+  height: 200px;
+  display: none;
+
+}
+
+#img161718{
+  width: 200px;
+  height: 200px;
+  display: none;
+}
+
+
+
+
+.humidity {
+  width: 200px;
+  height: 40px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+
+}
+
+
+
+.rainrate {
+  width: 200px;
+  height: 30px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+
+}
+
+.updatetime{
+  width: 280px;
+  height: 40px;
+  color: white;
+  font-size: 20px;
+  float: right;
+
+
+}
+
+#redo{
+
+  margin-right: 15px;
+  /* margin-top: 10px; */
+  float: right;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+
+
+.container4{
+  padding: 20px 30px;
+  width: 400px;
+  height: 350px;
+  background: linear-gradient(#B8DCFF,#567EE3);
+  border: 2px solid grey;
+  border-radius: 15px;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.6) ;
+  /* opacity: 0.5; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  overflow: hidden;
+  box-sizing: border-box;
+
+  display: none;
+
+
+}
+
+
+.setup{
+
+  width: 100%;
+  height: 100px;
+  color: white;
+  font-size: 80px;
+  font-weight: bold;
+  /* text-align: center; */
+}
+
+#areaspan{
+  width: 100%;
+  height: 60px;
+  color: white;
+  font-size: 40px;
+  /* text-align: center; */
+  display: block;
+  margin-top: 30px;
+}
+
+
+
+.selctor{
+  width: 335px;
+  height: 40px;
+  border: 2px solid #323651;
+  border-radius: 10px;
+
+}
+
+#back {
+  border: 1px solid #323651;
+  margin-top: 50px;
+  font-size: 20px;
+  border-radius: 5px;
+  font-weight: bold;
+
+}
+
+#confirm{
+  border: 1px solid #323651;
+  margin-top: 50px;
+  font-size: 20px;
+  border-radius: 5px;
+  float: right;
+  font-weight: bold;
+
+}
+
+</style>
