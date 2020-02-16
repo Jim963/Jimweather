@@ -51,6 +51,7 @@
         <img id="img020304" src="020304.svg">
         <img id="img0811" src="0811.svg">
         <img id="img161718" src="161718.png">
+        <img id="img07" src="07.png">
 
       </div>
 
@@ -186,8 +187,13 @@ document.getElementById('updatetime').innerHTML="最後更新時間 : " + h +"�
                   $("#img0811").show();
                   break;
 
-                  case "07":                  
+                  case "09":
+                  // document.getElementById('weatherimage').innerHTML = "成功"
                     $("#img0811").show();
+                    break;
+
+                  case "07":
+                    $("#img07").show();
                     break;
 
                   case "11":
@@ -240,7 +246,7 @@ $("#gear").click(function() {
 
 //儲存設定
 $("#confirm").click(function(){
-
+  $('img').hide();
   city_location = $("#selector").val();
   $("#locationName").html(city_location)
   getWeatherState();
@@ -400,6 +406,12 @@ body{
 }
 
 #img161718{
+  width: 200px;
+  height: 200px;
+  display: none;
+}
+
+#img07{
   width: 200px;
   height: 200px;
   display: none;
